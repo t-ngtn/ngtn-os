@@ -199,7 +199,6 @@ EFI_STATUS EFIAPI UefiMain(
     SaveMemoryMap(&memmap, memmap_file);
     memmap_file->Close(memmap_file);
 
-    // #@@range_begin(gop)
     EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
     OpenGOP(image_handle, &gop);
     Print(L"Resolution: %ux%u, Pixel Format: %s, %u pixels/line\n",
@@ -217,7 +216,6 @@ EFI_STATUS EFIAPI UefiMain(
     {
         frame_buffer[i] = 255;
     }
-    // #@@range_end(gop)
 
     EFI_FILE_PROTOCOL *kernel_file;
     root_dir->Open(
@@ -262,12 +260,12 @@ EFI_STATUS EFIAPI UefiMain(
     }
     // #@@range_end(exit_bs)
 
-    // #@@range_begin(call_kernel)
     UINT64 entry_addr = *(UINT64 *)(kernel_base_addr + 24);
 
-    typedef void EntryPointType(void);
+    // #@@range_begin(call_kernel)
+    typedef void EntryPointType(UINT64, UINT64);
     EntryPointType *entry_point = (EntryPointType *)entry_addr;
-    entry_point();
+    entry_point(gop->Mode->FrameBufferBase, gop->Mode->FrameBufferSize);
     // #@@range_end(call_kernel)
 
     Print(L"All done\n");
