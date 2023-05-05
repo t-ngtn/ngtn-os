@@ -3,6 +3,11 @@ try mikan OS book
 
 
 ## run
+on xquartz
+```bash
+xhost + 127.0.0.1
+```
+
 ```bash
 $ cd ~/edk2
 $ source edksetup.sh
