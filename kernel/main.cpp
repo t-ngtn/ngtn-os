@@ -96,6 +96,9 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config) {
   printk("Welcome to ngtnOS!\n");
   SetLogLevel(kWarn);
 
+  mouse_cursor = new (mouse_cursor_buf)
+      MouseCursor{pixel_writer, kDesktopBGColor, {300, 200}};
+
   auto err = pci::ScanAllBus();
   Log(kDebug, "ScanAllBus: %s\n", err.Name());
 
